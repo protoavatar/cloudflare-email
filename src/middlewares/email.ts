@@ -2,6 +2,7 @@ import iEmailSchema, { IEmail } from '../schema/email';
 
 export type EmailRequest = Request & {
 	email?: IEmail;
+	env?: Env;
 };
 
 /**
@@ -9,11 +10,12 @@ export type EmailRequest = Request & {
  * @param request
  * @constructor
  */
-const EmailSchemaMiddleware = async (request: EmailRequest) => {
+const EmailSchemaMiddleware = async (request: EmailRequest, env: Env) => {
 	const content = await request.json();
 	const email = iEmailSchema.safeParse(content);
 	if (email.success) {
 		request.email = email.data;
+		request.env = env;
 		return;
 	}
 

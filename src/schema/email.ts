@@ -17,13 +17,6 @@ const iEmailSchema = z.object({
 	subject: z.string(),
 	text: z.union([z.string(), z.undefined()]),
 	html: z.union([z.string(), z.undefined()]),
-	dkim: z
-		.object({
-			dkim_domain: z.string(),
-			dkim_selector: z.string(),
-			dkim_private_key: z.string(),
-		})
-		.optional(),
 });
 
 export type IContact = z.infer<typeof iContactSchema>;

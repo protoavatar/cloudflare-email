@@ -19,10 +19,9 @@ class Email {
 	 *
 	 * @param email
 	 */
-	static async send(email: IEmail) {
+	static async send(email: IEmail, env: Env) {
 		// convert email to IMCEmail (MailChannels Email)
-		const mcEmail: IMCEmail = Email.convertEmail(email);
-
+		const mcEmail: IMCEmail = Email.convertEmail(email, env);
 		// send email through MailChannels
 		const resp = await fetch(
 			new Request('https://api.mailchannels.net/tx/v1/send', {
@@ -45,20 +44,17 @@ class Email {
 	 * @param email
 	 * @protected
 	 */
-	protected static convertEmail(email: IEmail): IMCEmail {
+	protected static convertEmail(email: IEmail, env: Env): IMCEmail {
 		const personalizations: IMCPersonalization[] = [];
 
 		// Convert 'to' field
 		const toContacts: IMCContact[] = Email.convertContacts(email.to);
-		console.log('Email received: ', email);
-		email.dkim
-			? personalizations.push({
-					to: toContacts,
-					dkim_domain: email.dkim.dkim_domain,
-					dkim_selector: email.dkim.dkim_selector,
-					dkim_private_key: email.dkim.dkim_private_key,
-			  })
-			: personalizations.push({ to: toContacts });
+		personalizations.push({
+			to: toContacts,
+			dkim_domain: env.DKIM_DOMAIN,
+			dkim_selector: env.DKIM_SELECTOR,
+			dkim_private_key: env.DKIM_PRIVATE_KEY,
+		});
 
 		let replyTo: IMCContact | undefined = undefined;
 		let bccContacts: IMCContact[] | undefined = undefined;
@@ -99,7 +95,6 @@ class Email {
 
 		const content: IMCContent[] = [...textContent, ...htmlContent];
 
-		console.log('Answer: ', personalizations, from, replyTo, ccContacts, bccContacts, subject, content);
 		return {
 			personalizations,
 			from,

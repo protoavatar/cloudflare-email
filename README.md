@@ -5,7 +5,6 @@
 	<p>Send free transactional emails from your Cloudflare Workers using MailChannels.</p>
 </div>
 
-
 ## Getting Started!
 
 1. Clone this repository
@@ -21,17 +20,17 @@ Or deploy directly to Cloudflare
 
 SPF is a DNS record that helps prevent email spoofing. You will need to add an SPF record to your domain to allow MailChannels to send emails on your behalf.
 
-1. Add a `TXT` record to your domain with the following values:
+1.  Add a `TXT` record to your domain with the following values:
 
-		- Name: `@`
-		- Value: `v=spf1 a mx include:relay.mailchannels.net ~all`
+        - Name: `@`
+        - Value: `v=spf1 a mx include:relay.mailchannels.net ~all` (In case you are using other email servers, as an example to manage the corporate email on the domain, add this first, and after that the domains, eg "v=spf1 a mx include:relay.mailchannels.net include:zoho.com include:_spf.mx.cloudflare.net include:_spf.google.com ~all")
 
 Note: If you're facing [Domain Lockdown error](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown), follow the below steps:
 
-1. Create a `TXT` record with the following values:
+1.  Create a `TXT` record with the following values:
 
-		- Name: `_mailchannels`
-		- Value: `v=mc1 cfid=yourdomain.workers.dev` (the value of `cfid` will also be present in the error response)
+        - Name: `_mailchannels`
+        - Value: `v=mc1 cfid=yourdomain.workers.dev` (the value of `cfid` will also be present in the error response, not the complete worker name, but the domain of your cloudflare general domain)
 
 ## Setup DKIM
 
@@ -75,7 +74,7 @@ You can also specify a sender and recipient name by adding a `name` parameter to
 
 ```json
 {
-	"to": { "email": "john@example.com",  "name": "John Doe" },
+	"to": { "email": "john@example.com", "name": "John Doe" },
 	"from": { "email": "me@example.com", "name": "Jane Doe" },
 	"subject": "Hello World",
 	"text": "Hello World"
@@ -88,10 +87,7 @@ You may also send to multiple recipients by passing an array of emails, or an ar
 
 ```json
 {
-	"to": [
-		"john@example.com",
-		"rose@example.com"
- 	],
+	"to": ["john@example.com", "rose@example.com"],
 	"from": "me@example.com",
 	"subject": "Hello World",
 	"text": "Hello World"
@@ -105,7 +101,7 @@ or
 	"to": [
 		{ "email": "john@example.com", "name": "John Doe" },
 		{ "email": "rose@example.com", "name": "Rose Doe" }
- 	],
+	],
 	"from": "me@example.com",
 	"subject": "Hello World",
 	"text": "Hello World"
@@ -122,13 +118,8 @@ You can also send BCC and CC emails by passing an array of emails, an object wit
 	"from": "me@example.com",
 	"subject": "Hello World",
 	"text": "Hello World",
-	"cc": [
-		"jim@example.com",
-		"rose@example.com"
-	],
-	"bcc": [
-		"gil@example.com"
-	]
+	"cc": ["jim@example.com", "rose@example.com"],
+	"bcc": ["gil@example.com"]
 }
 ```
 
