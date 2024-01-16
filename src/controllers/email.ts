@@ -1,6 +1,6 @@
 import { IContact, IEmail } from '../schema/email';
 
-type IMCPersonalization = { to: IMCContact[] };
+type IMCPersonalization = { to: IMCContact[]; dkim_domain?: string; dkim_selector?: string; dkim_private_key?: string };
 type IMCContact = { email: string; name: string | undefined };
 type IMCContent = { type: string; value: string };
 
@@ -50,7 +50,14 @@ class Email {
 
 		// Convert 'to' field
 		const toContacts: IMCContact[] = Email.convertContacts(email.to);
-		personalizations.push({ to: toContacts });
+		email.dkim
+			? personalizations.push({
+					to: toContacts,
+					dkim_domain: email.dkim.dkim_domain,
+					dkim_selector: email.dkim.dkim_selector,
+					dkim_private_key: email.dkim.dkim_private_key,
+			  })
+			: personalizations.push({ to: toContacts });
 
 		let replyTo: IMCContact | undefined = undefined;
 		let bccContacts: IMCContact[] | undefined = undefined;
