@@ -50,6 +50,7 @@ class Email {
 
 		// Convert 'to' field
 		const toContacts: IMCContact[] = Email.convertContacts(email.to);
+		console.log('Email received: ', email);
 		email.dkim
 			? personalizations.push({
 					to: toContacts,
@@ -98,6 +99,7 @@ class Email {
 
 		const content: IMCContent[] = [...textContent, ...htmlContent];
 
+		console.log('Answer: ', personalizations, from, replyTo, ccContacts, bccContacts, subject, content);
 		return {
 			personalizations,
 			from,
